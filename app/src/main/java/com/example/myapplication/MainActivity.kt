@@ -1,3 +1,4 @@
+
 package com.example.myapplication
 
 import android.content.Intent
@@ -17,159 +18,110 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        auth =
-            FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         val emailEditText =
-            findViewById<EditText>(
-                R.id.emailEditText
-            )
-
+            findViewById<EditText>(R.id.emailEditText)
         val passwordEditText =
-            findViewById<EditText>(
-                R.id.passwordEditText
-            )
-
+            findViewById<EditText>(R.id.passwordEditText)
         val loginButton =
-            findViewById<Button>(
-                R.id.loginButton
-            )
-
-        val registerButton =
-            findViewById<Button>(
-                R.id.registerButton
-            )
+            findViewById<Button>(R.id.loginButton)
 
         loginButton.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString()
 
-            val email =
-                emailEditText
-                    .text
-                    .toString()
-                    .trim()
-
-            val password =
-                passwordEditText
-                    .text
-                    .toString()
-
-            if (
-                email.isEmpty() ||
-                password.isEmpty()
-            ) {
-
-                Toast.makeText(
-                    this,
-                    "Please enter email and password",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+            if (email.isEmpty() || password.isEmpty()) {
+                showMessage("Please enter email and password")
                 return@setOnClickListener
             }
 
-            auth.signInWithEmailAndPassword(
-                email,
-                password
-            ).addOnCompleteListener { task ->
+            loginButton.isEnabled = false
 
-                if (task.isSuccessful) {
-
-                    val firebaseUser =
-                        auth.currentUser
-
-                    if (firebaseUser == null) {
-
-                        Toast.makeText(
-                            this,
-                            "Login failed",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        loginButton.isEnabled = true
+                        showMessage(
+                            task.exception?.message ?: "Login failed"
+                        )
                         return@addOnCompleteListener
                     }
 
-                    val uid =
-                        firebaseUser.uid
+                    val user = auth.currentUser
+                    if (user == null) {
+                        loginButton.isEnabled = true
+                        showMessage("Login failed")
+                        return@addOnCompleteListener
+                    }
 
-                    FirebaseDatabase
-                        .getInstance()
+                    val uid = user.uid
+
+                    FirebaseDatabase.getInstance()
                         .getReference("users")
                         .child(uid)
-                        .child("verified")
                         .get()
                         .addOnSuccessListener { snapshot ->
+                            loginButton.isEnabled = true
 
-                            val verified =
-                                snapshot
-                                    .getValue(Boolean::class.java)
-                                    ?: false
+                            val role = snapshot.child("role")
+                                .getValue(String::class.java)
+
+                            val verified = snapshot.child("verified")
+                                .getValue(Boolean::class.java) ?: false
+
+                            if (role != "seller") {
+                                showMessage(
+                                    "This is not a Seller account. " +
+                                            "Please use the Buyer App."
+                                )
+                                auth.signOut()
+                                return@addOnSuccessListener
+                            }
 
                             if (verified) {
+                                showMessage("Seller login successful")
 
-                                Toast.makeText(
-                                    this,
-                                    "Login successful",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                                val intent =
+                                startActivity(
                                     Intent(
                                         this,
-                                        ProfileActivity::class.java
+                                        SellerDashboardActivity::class.java
                                     )
-
-                                startActivity(intent)
+                                )
                                 finish()
-
                             } else {
+                                showMessage(
+                                    "Please verify your account first"
+                                )
 
-                                Toast.makeText(
+                                val intent = Intent(
                                     this,
-                                    "Please verify your account first.",
-                                    Toast.LENGTH_LONG
-                                ).show()
-
-                                val intent =
-                                    Intent(
-                                        this,
-                                        VerificationActivity::class.java
-                                    )
-
-                                intent.putExtra(
-                                    "email",
-                                    email
+                                    VerificationActivity::class.java
                                 )
-
-                                intent.putExtra(
-                                    "uid",
-                                    uid
-                                )
-
+                                intent.putExtra("email", email)
+                                intent.putExtra("uid", uid)
                                 startActivity(intent)
                             }
                         }
-
-                } else {
-
-                    Toast.makeText(
-                        this,
-                        task.exception?.message
-                            ?: "Login failed",
-                        Toast.LENGTH_LONG
-                    ).show()
+                        .addOnFailureListener { exception ->
+                            loginButton.isEnabled = true
+                            auth.signOut()
+                            showMessage(
+                                "Database error: ${exception.message}"
+                            )
+                        }
                 }
-            }
         }
 
-        registerButton.setOnClickListener {
+    }
 
-            val intent =
-                Intent(
-                    this,
-                    RegisterActivity::class.java
-                )
-
-            startActivity(intent)
-        }
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
+
+

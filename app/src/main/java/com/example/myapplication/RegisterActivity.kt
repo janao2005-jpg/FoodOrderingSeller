@@ -1,12 +1,13 @@
+
 package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +18,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
-    // Replace this with your real Google Apps Script Web App URL
     private val webAppUrl =
         "https://script.google.com/macros/s/AKfycbx_Cmj5rU5Ps_yADO-kNtnWr8UB75L3-vPOtPClWKhIEMxeCfxQl5FR-9WEp54I1Hgxgw/exec"
 
@@ -29,59 +29,31 @@ class RegisterActivity : AppCompatActivity() {
 
         val nameEditText =
             findViewById<EditText>(R.id.nameEditText)
-
         val emailEditText =
             findViewById<EditText>(R.id.emailEditText)
-
         val phoneEditText =
             findViewById<EditText>(R.id.phoneEditText)
-
         val addressEditText =
             findViewById<EditText>(R.id.addressEditText)
-
         val passwordEditText =
             findViewById<EditText>(R.id.passwordEditText)
-
         val confirmPasswordEditText =
             findViewById<EditText>(R.id.confirmPasswordEditText)
 
-        val buyerRadioButton =
-            findViewById<RadioButton>(R.id.buyerRadioButton)
-
-        val sellerRadioButton =
-            findViewById<RadioButton>(R.id.sellerRadioButton)
-
         val registerButton =
             findViewById<Button>(R.id.registerButton)
-
         val backToLoginButton =
             findViewById<Button>(R.id.backToLoginButton)
 
         registerButton.setOnClickListener {
 
-            val name =
-                nameEditText.text.toString().trim()
-
-            val email =
-                emailEditText.text.toString().trim()
-
-            val phone =
-                phoneEditText.text.toString().trim()
-
-            val address =
-                addressEditText.text.toString().trim()
-
-            val password =
-                passwordEditText.text.toString()
-
+            val name = nameEditText.text.toString().trim()
+            val email = emailEditText.text.toString().trim()
+            val phone = phoneEditText.text.toString().trim()
+            val address = addressEditText.text.toString().trim()
+            val password = passwordEditText.text.toString()
             val confirmPassword =
                 confirmPasswordEditText.text.toString()
-
-            val role = when {
-                buyerRadioButton.isChecked -> "buyer"
-                sellerRadioButton.isChecked -> "seller"
-                else -> ""
-            }
 
             if (
                 name.isEmpty() ||
@@ -89,95 +61,84 @@ class RegisterActivity : AppCompatActivity() {
                 phone.isEmpty() ||
                 address.isEmpty() ||
                 password.isEmpty() ||
-                confirmPassword.isEmpty() ||
-                role.isEmpty()
+                confirmPassword.isEmpty()
             ) {
-
-                Toast.makeText(
-                    this,
-                    "Please fill all fields",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+                showMessage("Please fill all fields")
                 return@setOnClickListener
             }
 
             if (password != confirmPassword) {
-
-                Toast.makeText(
-                    this,
-                    "Passwords do not match",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+                showMessage("Passwords do not match")
                 return@setOnClickListener
             }
 
-            auth.createUserWithEmailAndPassword(
-                email,
-                password
-            ).addOnCompleteListener { task ->
+            if (password.length < 6) {
+                showMessage("Password must be at least 6 characters")
+                return@setOnClickListener
+            }
 
-                if (task.isSuccessful) {
+            registerButton.isEnabled = false
 
-                    val firebaseUser = auth.currentUser
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
 
-                    if (firebaseUser == null) {
-
-                        Toast.makeText(
-                            this,
-                            "Could not create account",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+                    if (!task.isSuccessful) {
+                        registerButton.isEnabled = true
+                        showMessage(
+                            task.exception?.message
+                                ?: "Registration failed"
+                        )
                         return@addOnCompleteListener
                     }
 
-                    val uid = firebaseUser.uid
+                    val user = auth.currentUser
 
-                    val userProfile = hashMapOf(
+                    if (user == null) {
+                        registerButton.isEnabled = true
+                        showMessage("Could not create account")
+                        return@addOnCompleteListener
+                    }
+
+                    val uid = user.uid
+
+                    val userProfile = hashMapOf<String, Any>(
                         "name" to name,
                         "email" to email,
                         "phone" to phone,
                         "address" to address,
-                        "role" to role,
+                        "role" to "seller",
                         "verified" to false
                     )
 
-                    FirebaseDatabase
-                        .getInstance()
-                        .getReference("users")
-                        .child(uid)
-                        .setValue(userProfile)
-                        .addOnCompleteListener { databaseTask ->
+                    val shopProfile = hashMapOf<String, Any>(
+                        "sellerId" to uid,
+                        "shopName" to name,
+                        "name" to name,
+                        "address" to address,
+                        "verified" to false,
+                        "photoKey" to "",
+                        "photoUrl" to ""
+                    )
 
-                            if (databaseTask.isSuccessful) {
-
-                                sendVerificationCode(
-                                    email = email,
-                                    uid = uid
-                                )
-
-                            } else {
-
-                                Toast.makeText(
-                                    this,
-                                    "Could not save profile: ${databaseTask.exception?.message}",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                    FirebaseDatabase.getInstance().reference
+                        .child("users").child(uid).setValue(userProfile)
+                        .addOnSuccessListener {
+                            FirebaseDatabase.getInstance().reference
+                                .child("shops").child(uid).setValue(shopProfile)
+                                .addOnSuccessListener { sendVerificationCode(email, uid) }
+                                .addOnFailureListener { exception ->
+                                    registerButton.isEnabled = true
+                                    showMessage("Could not publish shop: ${exception.message}")
+                                }
                         }
-
-                } else {
-
-                    Toast.makeText(
-                        this,
-                        task.exception?.message
-                            ?: "Registration failed",
-                        Toast.LENGTH_LONG
-                    ).show()
+                        .addOnFailureListener { exception ->
+                            registerButton.isEnabled = true
+                            showMessage(
+                                "Could not save profile: " +
+                                        exception.message
+                            )
+                        }
                 }
-            }
         }
 
         backToLoginButton.setOnClickListener {
@@ -189,74 +150,56 @@ class RegisterActivity : AppCompatActivity() {
         email: String,
         uid: String
     ) {
-
         val requestQueue = Volley.newRequestQueue(this)
 
-        val jsonBody = JSONObject()
-
-        jsonBody.put("action", "send")
-        jsonBody.put("email", email)
+        val body = JSONObject().apply {
+            put("action", "send")
+            put("email", email)
+        }
 
         val request = JsonObjectRequest(
-            com.android.volley.Request.Method.POST,
+            Request.Method.POST,
             webAppUrl,
-            jsonBody,
-
+            body,
             { response ->
-
-                val success =
-                    response.optBoolean("success")
-
-                val message =
-                    response.optString("message")
+                val success = response.optBoolean("success")
+                val message = response.optString("message")
 
                 if (success) {
+                    showMessage("Verification code sent to $email")
 
-                    Toast.makeText(
+                    val intent = Intent(
                         this,
-                        "Verification code sent to $email",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    val intent =
-                        Intent(
-                            this,
-                            VerificationActivity::class.java
-                        )
-
-                    intent.putExtra(
-                        "email",
-                        email
+                        VerificationActivity::class.java
                     )
-
-                    intent.putExtra(
-                        "uid",
-                        uid
-                    )
-
+                    intent.putExtra("email", email)
+                    intent.putExtra("uid", uid)
                     startActivity(intent)
                     finish()
-
                 } else {
-
-                    Toast.makeText(
-                        this,
-                        message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    showMessage(
+                        message.ifEmpty {
+                            "Could not send verification code"
+                        }
+                    )
                 }
             },
-
             { error ->
-
-                Toast.makeText(
-                    this,
-                    "Could not send verification code: ${error.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+                showMessage(
+                    "Verification request failed: " +
+                            (error.message ?: "Network error")
+                )
             }
         )
 
         requestQueue.add(request)
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

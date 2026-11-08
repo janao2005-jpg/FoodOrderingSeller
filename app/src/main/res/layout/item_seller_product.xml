@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="3dp"
+    app:strokeColor="#1A281638"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/productImageView"
+            android:layout_width="match_parent"
+            android:layout_height="132dp"
+            android:background="@drawable/product_image_background"
+            android:clipToOutline="true"
+            android:contentDescription="Product photo"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="Classic Beef Burger"
+            android:textColor="@color/aklny_plum"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productCategoryTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/welcome_muted"
+            android:textSize="11sp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/productPriceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="$6.99"
+            android:textColor="@color/aklny_plum"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productStockTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:text="Stock: 24"
+            android:textColor="@color/welcome_muted"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/saveProductButton"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/aklny_primary_button"
+                android:minWidth="0dp"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:drawableStart="@drawable/ic_seller_edit"
+                android:drawableTint="@color/aklny_plum"
+                android:drawablePadding="3dp"
+                android:text="Edit"
+                android:textAllCaps="false"
+                android:textColor="@color/aklny_plum"
+                android:textSize="11sp"
+                android:minHeight="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <Button
+                android:id="@+id/deleteProductButton"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/aklny_delete_button"
+                android:minWidth="0dp"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:drawableStart="@drawable/ic_seller_delete"
+                android:drawableTint="@color/aklny_delete"
+                android:drawablePadding="3dp"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:textColor="@color/aklny_delete"
+                android:textSize="11sp"
+                android:minHeight="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+
+
+
+

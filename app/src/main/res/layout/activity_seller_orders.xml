@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/aklny_cream" android:paddingHorizontal="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:paddingTop="10dp" android:paddingBottom="12dp">
+        <Button android:id="@+id/sellerOrdersBackButton" android:layout_width="44dp" android:layout_height="44dp" android:text="‹" android:textSize="28sp" android:textColor="@color/aklny_plum" android:background="@drawable/aklny_back_button" android:contentDescription="Back" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="Incoming orders" android:textColor="@color/aklny_plum" android:textSize="23sp" android:textStyle="bold" />
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/sellerOrdersRecyclerView" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingBottom="14dp" />
+        <TextView android:id="@+id/sellerOrdersEmptyTextView" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:padding="24dp" android:text="No orders yet. New orders from buyers will appear here." android:textColor="@color/aklny_plum_light" android:textSize="15sp" android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

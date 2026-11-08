@@ -7,7 +7,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.example.foodorderingseller"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
