@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/seller_screen_bg"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="AKLNY  ·  SELLER"
+        android:textColor="@color/aklny_plum_light"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/inventoryBackButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/aklny_back_button"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="‹"
+            android:textColor="@color/aklny_plum"
+            android:textSize="32sp"
+            android:textAllCaps="false"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/inventoryTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:text="My Products"
+            android:textColor="@color/aklny_plum"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/addProductButton"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:background="@drawable/aklny_primary_button"
+            android:minWidth="0dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="+ Add Product"
+            android:textAllCaps="false"
+            android:textColor="@color/aklny_plum"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/inventoryFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp" />
+</LinearLayout>

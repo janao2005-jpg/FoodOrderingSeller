@@ -2,4 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="welcome_cream">#FFF9F0</color>
+    <color name="welcome_green">#34734B</color>
+    <color name="welcome_ink">#20382A</color>
+    <color name="welcome_muted">#647468</color>
+    <color name="aklny_plum">#281638</color>
+    <color name="aklny_plum_light">#4A2D63</color>
+    <color name="aklny_mint">#A5F3D1</color>
+    <color name="aklny_lime">#D7F263</color>
+    <color name="aklny_lavender">#D3C5E2</color>
+    <color name="aklny_cream">#FFF6E7</color>
+    <color name="aklny_delete">#9B2C49</color>
+    <color name="aklny_delete_bg">#FFF0F2</color>
+    <color name="seller_screen_bg">#FFF9FA</color>
+    <color name="seller_delete_soft">#F8E6EB</color>
+    <color name="profile_surface">#FFFBFD</color>
 </resources>
