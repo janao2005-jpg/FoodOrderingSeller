@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -46,14 +47,13 @@ class SellerDashboardActivity : AppCompatActivity() {
             }
             override fun onCancelled(error: DatabaseError) = Unit
         }.also { root.child("orders").addValueEventListener(it) }
-
         findViewById<Button>(R.id.sellerDashboardProductsButton).setOnClickListener {
             startActivity(Intent(this, SellerInventoryActivity::class.java))
         }
         findViewById<Button>(R.id.sellerDashboardOrdersButton).setOnClickListener {
             startActivity(Intent(this, SellerOrdersActivity::class.java))
         }
-        findViewById<Button>(R.id.sellerDashboardProfileButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.sellerDashboardProfileButton).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
         findViewById<Button>(R.id.sellerDashboardBottomHomeButton).setOnClickListener { }

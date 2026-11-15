@@ -3,37 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/seller_screen_bg"
+    android:background="@color/aklny_cream"
     android:paddingStart="12dp"
-    android:paddingEnd="12dp">
+    android:paddingEnd="12dp"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="AKLNY  ·  SELLER"
-        android:textColor="@color/aklny_plum_light"
-        android:textSize="13sp"
-        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/inventoryBackButton"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/aklny_back_button"
+            android:src="@drawable/ic_arrow_back"
+            android:scaleType="fitCenter"
             android:minWidth="0dp"
-            android:padding="0dp"
-            android:text="‹"
-            android:textColor="@color/aklny_plum"
-            android:textSize="32sp"
-            android:textAllCaps="false"
+            android:padding="10dp"
+            android:contentDescription="Back to seller home"
             android:visibility="gone" />
 
         <TextView
