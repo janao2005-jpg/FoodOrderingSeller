@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
@@ -12,8 +13,8 @@ class SellerInventoryActivity : AppCompatActivity() {
     fun showProducts() {
         showingAddProduct = false
         findViewById<TextView>(R.id.inventoryTitleTextView).text = "My Products"
-        findViewById<Button>(R.id.inventoryBackButton).visibility = android.view.View.VISIBLE
-        findViewById<Button>(R.id.inventoryBackButton).contentDescription = "Back to profile"
+        findViewById<ImageButton>(R.id.inventoryBackButton).visibility = android.view.View.VISIBLE
+        findViewById<ImageButton>(R.id.inventoryBackButton).contentDescription = "Back to profile"
         findViewById<Button>(R.id.addProductButton).visibility = android.view.View.VISIBLE
         supportFragmentManager.beginTransaction()
             .replace(R.id.inventoryFragmentContainer, SellerProductsFragment())
@@ -23,8 +24,8 @@ class SellerInventoryActivity : AppCompatActivity() {
     fun showAddProduct() {
         showingAddProduct = true
         findViewById<TextView>(R.id.inventoryTitleTextView).text = "Add Product"
-        findViewById<Button>(R.id.inventoryBackButton).visibility = android.view.View.VISIBLE
-        findViewById<Button>(R.id.inventoryBackButton).contentDescription = "Back to my products"
+        findViewById<ImageButton>(R.id.inventoryBackButton).visibility = android.view.View.VISIBLE
+        findViewById<ImageButton>(R.id.inventoryBackButton).contentDescription = "Back to my products"
         findViewById<Button>(R.id.addProductButton).visibility = android.view.View.GONE
         supportFragmentManager.beginTransaction()
             .replace(R.id.inventoryFragmentContainer, AddProductFragment())
@@ -34,7 +35,7 @@ class SellerInventoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seller_inventory)
-        findViewById<Button>(R.id.inventoryBackButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.inventoryBackButton).setOnClickListener {
             if (showingAddProduct) showProducts() else finish()
         }
         findViewById<Button>(R.id.addProductButton).setOnClickListener {

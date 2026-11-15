@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,7 @@ private data class SellerOrderRow(
 )
 
 class SellerOrdersActivity : AppCompatActivity() {
-    private val ordersRef = FirebaseDatabase.getInstance().reference.child("orders")
+    private val root = FirebaseDatabase.getInstance().reference
     private var listener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +37,15 @@ class SellerOrdersActivity : AppCompatActivity() {
         setContentView(R.layout.activity_seller_orders)
         window.statusBarColor = getColor(R.color.aklny_cream)
         window.navigationBarColor = getColor(R.color.aklny_cream)
-        findViewById<Button>(R.id.sellerOrdersBackButton).setOnClickListener { finish() }
+        findViewById<ImageButton>(R.id.sellerOrdersBackButton).setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: run { finish(); return }
         val list = findViewById<RecyclerView>(R.id.sellerOrdersRecyclerView)
         val empty = findViewById<TextView>(R.id.sellerOrdersEmptyTextView)
         val adapter = SellerOrderAdapter { row, nextStatus ->
-            ordersRef.child(row.id).child("status").setValue(nextStatus)
+            val updates = mapOf(
+                "sellerOrders/${FirebaseAuth.getInstance().currentUser?.uid}/${row.id}/status" to nextStatus
+            )
+            root.updateChildren(updates)
                 .addOnSuccessListener { Toast.makeText(this, "Order marked $nextStatus", Toast.LENGTH_SHORT).show() }
                 .addOnFailureListener { Toast.makeText(this, it.message ?: "Could not update order", Toast.LENGTH_LONG).show() }
         }
@@ -78,11 +82,11 @@ class SellerOrdersActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@SellerOrdersActivity, error.message, Toast.LENGTH_LONG).show()
             }
-        }.also { ordersRef.addValueEventListener(it) }
+        }.also { root.child("sellerOrders").child(uid).addValueEventListener(it) }
     }
 
     override fun onDestroy() {
-        listener?.let { ordersRef.removeEventListener(it) }
+        listener?.let { root.child("sellerOrders").child(FirebaseAuth.getInstance().currentUser?.uid.orEmpty()).removeEventListener(it) }
         super.onDestroy()
     }
 }

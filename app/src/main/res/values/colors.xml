@@ -17,4 +17,5 @@
     <color name="seller_screen_bg">#FFF9FA</color>
     <color name="seller_delete_soft">#F8E6EB</color>
     <color name="profile_surface">#FFFBFD</color>
+    <color name="seller_metric_bg">#DFF7E9</color>
 </resources>

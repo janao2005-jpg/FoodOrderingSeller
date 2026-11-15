@@ -2,9 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/profile_surface"
+    android:background="@color/aklny_cream"
     android:fillViewport="true"
-    android:overScrollMode="never">
+    android:overScrollMode="never"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,15 +16,37 @@
         android:paddingEnd="24dp"
         android:paddingBottom="28dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:text="Seller Profile"
-            android:textColor="@color/aklny_plum"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/profileBackButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/aklny_back_button"
+                android:src="@drawable/ic_arrow_back"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:contentDescription="Back to seller home" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Seller Profile"
+                android:textColor="@color/aklny_plum"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="42dp"
+                android:layout_height="42dp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/profileImageView"
